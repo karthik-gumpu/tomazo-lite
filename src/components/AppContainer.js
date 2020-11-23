@@ -4,6 +4,7 @@ import Grid from "@material-ui/core/Grid";
 import { Toolbar } from "@material-ui/core";
 
 import Header from "./Header";
+import RestaurantsContainer from "./RestaurantsContainer";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -18,7 +19,7 @@ const AppContainer = () => {
       <Grid container>
         <Header />
         <Toolbar />
-        Welcome to zomato lite
+        <RestaurantsContainer />
       </Grid>
     </div>
   );
