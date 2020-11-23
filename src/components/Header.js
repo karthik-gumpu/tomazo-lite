@@ -7,6 +7,7 @@ import LocationOnIcon from "@material-ui/icons/LocationOn";
 import Button from "@material-ui/core/Button";
 
 import LocationChangeModal from "./LocationChangeModal";
+import LocationContext from "../store/LocationContext";
 
 const useStyles = makeStyles((theme) => ({
   subTitle: {
@@ -21,6 +22,8 @@ const useStyles = makeStyles((theme) => ({
 
 const Header = () => {
   const classes = useStyles();
+  const locationContext = React.useContext(LocationContext);
+
   const [openModal, setOpenModal] = React.useState(true);
   return (
     <AppBar position="static">
@@ -35,7 +38,7 @@ const Header = () => {
             color="inherit"
             onClick={() => setOpenModal(true)}
           >
-            <LocationOnIcon /> Hyderabad
+            <LocationOnIcon /> {locationContext?.city || "Yoyo"}
           </Button>
         </Typography>
       </Toolbar>
