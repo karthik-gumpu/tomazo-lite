@@ -6,3 +6,5 @@ export const ZOMATO_LOCAL_STORAGE = {
   STORAGE_NAME: "ADsewKewr3DAgtdASw2J",
   LOCATION: "eroAWdEkls323WedWklsdOD",
 };
+
+export const PAGINATION_LIMIT = 20;

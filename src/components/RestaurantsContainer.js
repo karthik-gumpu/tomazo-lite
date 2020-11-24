@@ -1,11 +1,13 @@
 import React from "react";
 import { Grid } from "@material-ui/core";
+import { Waypoint } from "react-waypoint";
 
 import Restaurant from "./Restaurant";
 import RestaurantSearch from "./RestaurantSearch";
 import api from "../utils/api";
 import LocationContext from "../store/LocationContext";
 import EmptyLoader from "./EmptyLoader";
+import { PAGINATION_LIMIT } from "../constants";
 
 // import allData from "./data.json";
 
@@ -20,27 +22,54 @@ class RestaurantsContainer extends React.Component {
         results_shown: 0,
         // ...allData,
       },
+      selectedData: {},
       loading: false,
     };
   }
 
-  getRestaurants = (data) => {
+  onSearch = (selectedData) => {
+    this.setState({ selectedData }, this.getRestaurants);
+  };
+
+  getRestaurants = (fetchMore) => {
+    this.setState({ loading: true });
+    const { selectedData, data } = this.state;
     const { location } = this.context;
-    const cuisineIds = data.cuisineIds.join(",");
-    const categoryIds = data.categoryIds.join(",");
+    const cuisineIds = selectedData.cuisineIds.join(",");
+    const categoryIds = selectedData.categoryIds.join(",");
+    const start = fetchMore ? data.results_start + data.results_shown : 0;
     api
       .request({
-        url: `/v2.1/search?entity_id=${location.id}&entity_type=city&cuisines${cuisineIds}&categories${categoryIds}&q=${data.searchKey}`,
+        url: `/v2.1/search?entity_id=${location.id}&entity_type=city&cuisines${cuisineIds}&categories${categoryIds}&q=${selectedData.searchKey}&start=${start}&count=${PAGINATION_LIMIT}`,
       })
-      .then((data) => {
-        this.setState({ data });
+      .then((response) => {
+        this.setState((prevState) => {
+          const updatedData = {
+            ...prevState.data,
+            ...response,
+            restaurants: [
+              ...prevState.data.restaurants,
+              ...response.restaurants,
+            ],
+          };
+          return { data: updatedData, loading: false };
+        });
       });
+  };
+
+  getMoreRestaurants = () => {
+    this.getRestaurants(true);
   };
   render() {
     const { data, loading } = this.state;
+    const canApplyWaypoint =
+      !loading && // Apply waypoint if api is not in progress
+      data.results_found && // Apply waypoint if there are any records
+      data.results_start + data.results_shown < data.results_found; // Apply waypoint if there are more records to load
+
     return (
       <Grid container style={{ margin: 20 }}>
-        <RestaurantSearch onSearch={this.getRestaurants} />
+        <RestaurantSearch onSearch={this.onSearch} />
         <Grid container spacing={2} style={{ paddingTop: 30 }}>
           {data.restaurants.map((item) => (
             <Grid item xs={12} sm={6} md={3} key={item.restaurant.id}>
@@ -53,6 +82,9 @@ class RestaurantsContainer extends React.Component {
                 <EmptyLoader />
               </Grid>
             ))}
+          {canApplyWaypoint ? (
+            <Waypoint onEnter={this.getMoreRestaurants} />
+          ) : null}
         </Grid>
       </Grid>
     );
