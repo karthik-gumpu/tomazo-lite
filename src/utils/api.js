@@ -1,7 +1,7 @@
 import axios from "axios";
 import { v4 as uuid } from "uuid";
 import Promise from "bluebird";
-import constants from "../constants";
+import * as constants from "../constants";
 
 Promise.config({
   cancellation: true,
@@ -14,7 +14,7 @@ const getFullUrl = (url) => {
 const simpleAxiosInstance = axios.create({
   headers: {
     "Content-Type": "application/json",
-    "user-key": constants.USER_KEY,
+    "user-key": constants.ZOMATO_USER_KEY,
   },
 });
 

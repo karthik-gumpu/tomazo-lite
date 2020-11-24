@@ -24,7 +24,9 @@ const Header = () => {
   const classes = useStyles();
   const locationContext = React.useContext(LocationContext);
 
-  const [openModal, setOpenModal] = React.useState(true);
+  const [openModal, setOpenModal] = React.useState(
+    !Boolean(locationContext.location)
+  );
   return (
     <AppBar position="static">
       <Toolbar>
@@ -38,7 +40,8 @@ const Header = () => {
             color="inherit"
             onClick={() => setOpenModal(true)}
           >
-            <LocationOnIcon /> {locationContext?.city || "Yoyo"}
+            <LocationOnIcon />
+            {locationContext?.location?.name || "Select Location"}
           </Button>
         </Typography>
       </Toolbar>
