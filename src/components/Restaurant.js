@@ -13,16 +13,22 @@ import IconButton from "@material-ui/core/IconButton";
 import ChatBubbleOutlineIcon from "@material-ui/icons/ChatBubbleOutline";
 import { get } from "lodash";
 import LocationOnIcon from "@material-ui/icons/LocationOn";
+import MoneyIcon from "@material-ui/icons/Money";
 
 const useStyles = makeStyles({
   root: {
-    maxWidth: 300,
+    // height: 450,
   },
   media: {
     height: 140,
   },
   actionIcon: {
     fontSize: 15,
+  },
+  ellipsis: {
+    whiteSpace: "nowrap",
+    overflow: "hidden",
+    textOverflow: "ellipsis",
   },
 });
 
@@ -36,39 +42,50 @@ const Restaurant = ({ restaurant, ...props }) => {
       <CardActionArea>
         <CardMedia
           className={classes.media}
-          image={restaurant.featured_image}
+          image={restaurant.thumb}
           title={restaurant.name}
         />
         <CardContent>
-          <Typography gutterBottom variant="h5" component="h2">
+          <Typography
+            gutterBottom
+            variant="h5"
+            component="h4"
+            className={classes.ellipsis}
+            title={restaurant.name}
+          >
             {restaurant.name}
           </Typography>
-          <Typography variant="h6" component="h6">
+          <Typography title={restaurant.cuisines} className={classes.ellipsis}>
             {restaurant.cuisines}
           </Typography>
-          <Typography variant="body2" color="textSecondary" component="p">
-            <Typography variant="body2" color="textSecondary" component="p">
-              <LocationOnIcon /> {get(restaurant, "location.address", "N/A")}
-            </Typography>
-            <Typography variant="body2" color="textSecondary" component="p">
-              {`${restaurant.currency} ${get(
-                restaurant,
-                "average_cost_for_two",
-                "N/A"
-              )} Cost for Two`}
-            </Typography>
-            {isTrue(restaurant.has_table_booking) && (
-              <Button variant="outlined" color="primary" size="small">
-                Reserve Table
-              </Button>
-            )}
-            &nbsp;
-            {isTrue(restaurant.has_online_delivery) && (
-              <Button variant="outlined" color="primary" size="small">
-                Order Now
-              </Button>
-            )}
+          <Typography
+            variant="body2"
+            color="textSecondary"
+            component="p"
+            className={classes.ellipsis}
+            title={get(restaurant, "location.address", "N/A")}
+          >
+            <LocationOnIcon /> {get(restaurant, "location.address", "N/A")}
           </Typography>
+          <Typography variant="body2" color="textSecondary" component="p">
+            <MoneyIcon />
+            {` ${restaurant.currency} ${get(
+              restaurant,
+              "average_cost_for_two",
+              "N/A"
+            )} per two persons`}
+          </Typography>
+          {isTrue(restaurant.has_table_booking) && (
+            <Button variant="outlined" color="primary" size="small">
+              Reserve Table
+            </Button>
+          )}
+          &nbsp;&nbsp;
+          {isTrue(restaurant.has_online_delivery) && (
+            <Button variant="outlined" color="primary" size="small">
+              Order Now
+            </Button>
+          )}
         </CardContent>
       </CardActionArea>
       <CardActions disableSpacing>

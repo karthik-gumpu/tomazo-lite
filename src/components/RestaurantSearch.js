@@ -43,8 +43,9 @@ class RestaurantsSearch extends React.Component {
   }
 
   componentDidMount() {
-    this.getCategories();
-    this.getCuisines();
+    // TODO: Commenting temporarly. Uncomment later
+    // this.getCategories();
+    // this.getCuisines();
   }
 
   updateSelectedData = (key, value) => {
