@@ -133,8 +133,8 @@ class RestaurantsContainer extends React.Component {
     return (
       <Grid container style={{ padding: 10 }}>
         <RestaurantSearch onSearch={this.getRestaurants} />
-        {restaurants.map((restaurant) => (
-          <Restaurant restaurant={restaurant} key={restaurant.id} />
+        {restaurants.map((item) => (
+          <Restaurant restaurant={item.restaurant} key={item.restaurant.id} />
         ))}
       </Grid>
     );

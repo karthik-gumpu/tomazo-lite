@@ -31,27 +31,33 @@ class RestaurantsSearch extends React.Component {
     super(props);
     this.state = {
       loading: false,
-      categories: data.categories,
+      categories: [],
+      suggestions: [],
       cuisines: [],
       selectedData: {
         cuisineIds: [],
         categoryIds: [],
+        searchKey: "",
       },
     };
   }
 
   componentDidMount() {
-    // this.getCategories();
-    // this.getCuisines();
+    this.getCategories();
+    this.getCuisines();
   }
 
-  handleSelectChange = (e, type) => {
+  updateSelectedData = (key, value) => {
     this.setState((prevState) => ({
       selectedData: {
         ...prevState.selectedData,
-        [type]: e.target.value,
+        [key]: value,
       },
     }));
+  };
+
+  handleSelectChange = (e, type) => {
+    this.updateSelectedData(type, e.target.value);
   };
 
   getCuisines = () => {
@@ -69,7 +75,13 @@ class RestaurantsSearch extends React.Component {
         this.setState({ categories });
       });
   };
+  handleSearch = () => {
+    this.props.onSearch(this.state.selectedData);
+  };
 
+  handleChange = (e) => {
+    this.updateSelectedData("searchKey", e.target.value);
+  };
   render() {
     console.log("state", this.state);
     const { selectedData, cuisines, categories } = this.state;
@@ -81,8 +93,11 @@ class RestaurantsSearch extends React.Component {
             <SearchBox
               icon={RestaurantIcon}
               placeholder="Search restaurants..."
-              options={this.state.restaurants}
+              options={this.state.suggestions}
               loading={this.state.loading}
+              onChange={this.handleChange}
+              value={selectedData.searchKey}
+              getOptionLabel={(option) => option.name || ""}
             />
           </Grid>
         </Grid>
@@ -143,7 +158,7 @@ class RestaurantsSearch extends React.Component {
                         const item = cuisines.find(
                           (x) => x.cuisine.cuisine_id === id
                         );
-                        return item.categories.cuisine_name;
+                        return item.cuisine.cuisine_name;
                       })
                       .join(",");
                   }}
@@ -173,6 +188,7 @@ class RestaurantsSearch extends React.Component {
                   color="primary"
                   fullWidth
                   style={{ marginTop: 10 }}
+                  onClick={this.handleSearch}
                 >
                   <SearchIcon /> Search
                 </Button>
