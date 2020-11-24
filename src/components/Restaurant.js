@@ -93,22 +93,25 @@ const Restaurant = ({ restaurant, ...props }) => {
         </CardContent>
       </CardActionArea>
       <CardActions disableSpacing>
-        <IconButton
-          className={classes.actionIcon}
-          style={{
-            color: `#${get(restaurant, "user_rating.rating_color", "inherit")}`,
-          }}
-        >
-          <StarBorderIcon />
+        <IconButton className={classes.actionIcon}>
+          <StarBorderIcon
+            style={{
+              color: `#${get(
+                restaurant,
+                "user_rating.rating_color",
+                "inherit"
+              )}`,
+            }}
+          />
           {get(restaurant, "user_rating.aggregate_rating", "N/A")}
         </IconButton>
-        <IconButton
-          className={classes.actionIcon}
-          style={{
-            color: `#fc6c85`,
-          }}
-        >
-          <FavoriteBorderIcon /> {get(restaurant, "user_rating.votes", "N/A")}
+        <IconButton className={classes.actionIcon}>
+          <FavoriteBorderIcon
+            style={{
+              color: `#fc6c85`,
+            }}
+          />
+          {get(restaurant, "user_rating.votes", "N/A")}
         </IconButton>
         <IconButton className={classes.actionIcon}>
           <ChatBubbleOutlineIcon /> {get(restaurant, "all_reviews_count", 0)}

@@ -8,18 +8,22 @@ import api from "../utils/api";
 import LocationContext from "../store/LocationContext";
 import EmptyLoader from "./EmptyLoader";
 import { PAGINATION_LIMIT } from "../constants";
+import SortingMenu from "./SortingMenu";
 
-// import allData from "./data.json";
+import allData from "./data.json";
 
 class RestaurantsContainer extends React.Component {
   constructor(props) {
     super(props);
+    this.defaultData = {
+      restaurants: [],
+      results_found: 0,
+      results_start: 0,
+      results_shown: 0,
+    };
     this.state = {
       data: {
-        restaurants: [],
-        results_found: 0,
-        results_start: 0,
-        results_shown: 0,
+        ...this.defaultData,
         // ...allData,
       },
       selectedData: {},
@@ -32,6 +36,9 @@ class RestaurantsContainer extends React.Component {
   };
 
   getRestaurants = (fetchMore) => {
+    if (!fetchMore) {
+      this.setState({ data: this.defaultData });
+    }
     this.setState({ loading: true });
     const { selectedData, data } = this.state;
     const { location } = this.context;
@@ -40,7 +47,7 @@ class RestaurantsContainer extends React.Component {
     const start = fetchMore ? data.results_start + data.results_shown : 0;
     api
       .request({
-        url: `/v2.1/search?entity_id=${location.id}&entity_type=city&cuisines${cuisineIds}&categories${categoryIds}&q=${selectedData.searchKey}&start=${start}&count=${PAGINATION_LIMIT}`,
+        url: `/v2.1/search?entity_id=${location.id}&entity_type=city&cuisines${cuisineIds}&categories${categoryIds}&q=${selectedData.searchKey}&start=${start}&count=${PAGINATION_LIMIT}&sort=${selectedData.sort}&order=${selectedData.order}`,
       })
       .then((response) => {
         this.setState((prevState) => {
@@ -60,8 +67,17 @@ class RestaurantsContainer extends React.Component {
   getMoreRestaurants = () => {
     this.getRestaurants(true);
   };
+
+  handleSortChange = (key, value) => {
+    this.setState(
+      (prevState) => ({
+        selectedData: { ...prevState.selectedData, [key]: value },
+      }),
+      this.getRestaurants
+    );
+  };
   render() {
-    const { data, loading } = this.state;
+    const { data, loading, selectedData } = this.state;
     const canApplyWaypoint =
       !loading && // Apply waypoint if api is not in progress
       data.results_found && // Apply waypoint if there are any records
@@ -71,6 +87,20 @@ class RestaurantsContainer extends React.Component {
       <Grid container style={{ margin: 20 }}>
         <RestaurantSearch onSearch={this.onSearch} />
         <Grid container spacing={2} style={{ paddingTop: 30 }}>
+          {data.results_found ? (
+            <>
+              <Grid item xs={6} md={6}>
+                Showing {data.results_start + data.results_shown} of
+                {data.results_found} restaurants
+              </Grid>
+              <Grid item xs={6} md={6} style={{ textAlign: "right" }}>
+                <SortingMenu
+                  selectedData={selectedData || {}}
+                  onSortChange={this.handleSortChange}
+                />
+              </Grid>
+            </>
+          ) : null}
           {data.restaurants.map((item) => (
             <Grid item xs={12} sm={6} md={3} key={item.restaurant.id}>
               <Restaurant restaurant={item.restaurant} />
