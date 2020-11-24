@@ -1,96 +1,106 @@
 import React from "react";
 import Button from "@material-ui/core/Button";
-import TextField from "@material-ui/core/TextField";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
-import DialogTitle from "@material-ui/core/DialogTitle";
-import { fade, makeStyles } from "@material-ui/core/styles";
-import InputBase from "@material-ui/core/InputBase";
-import SearchIcon from "@material-ui/icons/Search";
 import LocationOnIcon from "@material-ui/icons/LocationOn";
+import Grid from "@material-ui/core/Grid";
+import Typography from "@material-ui/core/Typography";
 
-const useStyles = makeStyles((theme) => ({
-  grow: {
-    flexGrow: 1,
-  },
-  menuButton: {
-    marginRight: theme.spacing(2),
-  },
-  title: {
-    display: "none",
-    [theme.breakpoints.up("sm")]: {
-      display: "block",
-    },
-  },
-  search: {
-    position: "relative",
-    borderRadius: theme.shape.borderRadius,
-    backgroundColor: fade(theme.palette.common.black, 0.15),
-    "&:hover": {
-      backgroundColor: fade(theme.palette.common.black, 0.25),
-    },
-    marginRight: theme.spacing(2),
-    marginLeft: 0,
-    width: "100%",
-    [theme.breakpoints.up("sm")]: {
-      marginLeft: theme.spacing(3),
-      width: "auto",
-    },
-  },
-  searchIcon: {
-    padding: theme.spacing(0, 2),
-    height: "100%",
-    position: "absolute",
-    pointerEvents: "none",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  inputRoot: {
-    color: "grey",
-  },
-  inputInput: {
-    padding: theme.spacing(1, 1, 1, 0),
-    paddingLeft: `calc(1em + ${theme.spacing(4)}px)`,
-    transition: theme.transitions.create("width"),
-    width: "100%",
-    [theme.breakpoints.up("md")]: {
-      width: "20ch",
-    },
-  },
-}));
+import api, { cancelApis } from "../utils/api";
+import SearchBox from "./SearchBox";
+import { storeJsonInLocal } from "../utils/lsUtils";
+import { ZOMATO_LOCAL_STORAGE } from "../constants";
+import LocationContext from "../store/LocationContext";
 
-const SearchBox = () => {
-  const classes = useStyles();
-
+const CityRender = ({ city, ...props }) => {
   return (
-    <div className={classes.grow}>
-      <div className={classes.search}>
-        <div className={classes.searchIcon}>
-          <LocationOnIcon />
-        </div>
-        <InputBase
-          placeholder="Search location…"
-          classes={{
-            root: classes.inputRoot,
-            input: classes.inputInput,
-          }}
-        />
-      </div>
-    </div>
+    <Grid container alignItems="center" onClick={() => props.onClick(city)}>
+      <Grid item>
+        <LocationOnIcon />
+      </Grid>
+      <Grid item xs>
+        {city.name}
+        <Typography variant="body2" color="textSecondary">
+          {city.state_code} {city.country_name}
+        </Typography>
+      </Grid>
+    </Grid>
   );
 };
-const ChangeLocationModal = ({ open, handleClose, ...props }) => {
+
+const ChangeLocationModal = ({ open, handleClose }) => {
+  const [results, setResults] = React.useState([]);
+  const [loading, setLoading] = React.useState(false);
+  const [search, setSearch] = React.useState("");
+
+  const locationContext = React.useContext(LocationContext);
+
+  const apiRequest = React.useRef(false);
+  const timeoutRequest = React.useRef(false);
+
+  const searchCities = (e, t) => {
+    setSearch(e.target.value);
+    setResults([]);
+
+    // Cancel if there is any prev in progress api call
+    if (apiRequest.current) {
+      cancelApis([apiRequest.current]);
+    }
+
+    if (timeoutRequest.current) {
+      clearTimeout(timeoutRequest.current);
+    }
+    // Do api call on 1 sec typing pause
+    timeoutRequest.current = setTimeout(() => {
+      getCities(e.target.value);
+    }, 1000);
+  };
+
+  const getCities = (key) => {
+    setLoading(true);
+    apiRequest.current = api.request({ url: `/v2.1/cities?q=${key}` }).then(
+      (response) => {
+        setLoading(false);
+        setResults(response.location_suggestions);
+      },
+      () => {
+        setLoading(false);
+      }
+    );
+  };
+
+  const onSelect = (city) => {
+    // Cache selected city for next time visit
+    storeJsonInLocal({
+      [ZOMATO_LOCAL_STORAGE.LOCATION]: city,
+    });
+
+    // Update in context
+    locationContext.setLocation(city);
+
+    // Close modal
+    handleClose();
+  };
+
   return (
     <Dialog open={open}>
       <DialogContent>
         <DialogContentText>
-          Please search for your location to findout more relative restaurents
-          near to you
+          Please search for your location to findout more restaurants near to
+          you
         </DialogContentText>
-        <SearchBox />
+        <SearchBox
+          icon={LocationOnIcon}
+          placeholder="Search cities..."
+          onChange={searchCities}
+          value={search}
+          options={results}
+          renderOption={(city) => <CityRender city={city} onClick={onSelect} />}
+          getOptionLabel={(option) => option.name || ""}
+          loading={loading}
+        />
       </DialogContent>
       <DialogActions>
         <Button onClick={handleClose} color="secondary">
