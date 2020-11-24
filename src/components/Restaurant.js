@@ -81,19 +81,33 @@ const Restaurant = ({ restaurant, ...props }) => {
             </Button>
           )}
           &nbsp;&nbsp;
-          {isTrue(restaurant.has_online_delivery) && (
+          {isTrue(restaurant.is_delivering_now) ? (
             <Button variant="outlined" color="primary" size="small">
               Order Now
+            </Button>
+          ) : (
+            <Button variant="outlined" color="seconday" size="small">
+              Not Delivering
             </Button>
           )}
         </CardContent>
       </CardActionArea>
       <CardActions disableSpacing>
-        <IconButton className={classes.actionIcon}>
+        <IconButton
+          className={classes.actionIcon}
+          style={{
+            color: `#${get(restaurant, "user_rating.rating_color", "inherit")}`,
+          }}
+        >
           <StarBorderIcon />
           {get(restaurant, "user_rating.aggregate_rating", "N/A")}
         </IconButton>
-        <IconButton className={classes.actionIcon}>
+        <IconButton
+          className={classes.actionIcon}
+          style={{
+            color: `#fc6c85`,
+          }}
+        >
           <FavoriteBorderIcon /> {get(restaurant, "user_rating.votes", "N/A")}
         </IconButton>
         <IconButton className={classes.actionIcon}>
