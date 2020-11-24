@@ -47,10 +47,10 @@ const Restaurant = ({ restaurant, ...props }) => {
             {restaurant.cuisines}
           </Typography>
           <Typography variant="body2" color="textSecondary" component="p">
-            <Typography variant="body3" color="textSecondary" component="p">
+            <Typography variant="body2" color="textSecondary" component="p">
               <LocationOnIcon /> {get(restaurant, "location.address", "N/A")}
             </Typography>
-            <Typography variant="body3" color="textSecondary" component="p">
+            <Typography variant="body2" color="textSecondary" component="p">
               {`${restaurant.currency} ${get(
                 restaurant,
                 "average_cost_for_two",
