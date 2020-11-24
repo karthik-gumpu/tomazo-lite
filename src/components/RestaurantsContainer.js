@@ -3,6 +3,8 @@ import { Grid } from "@material-ui/core";
 
 import Restaurant from "./Restaurant";
 import RestaurantSearch from "./RestaurantSearch";
+import api from "../utils/api";
+import LocationContext from "../store/LocationContext";
 
 const data = {
   results_found: "53",
@@ -111,17 +113,34 @@ class RestaurantsContainer extends React.Component {
       loading: false,
     };
   }
+
+  getRestaurants = (data) => {
+    const { location } = this.context;
+    api
+      .request({
+        url: `/v2.1/search?entity_id=${
+          location.id
+        }&entity_type=city&cuisines${data.cuisineIds.join(
+          ","
+        )}&categories${data.categoryIds.join(",")}&q=${data.searchKey}`,
+      })
+      .then((response) => {
+        this.setState({ restaurants: response.restaurants });
+      });
+  };
   render() {
+    const { restaurants } = this.state;
     return (
       <Grid container style={{ padding: 10 }}>
-        <RestaurantSearch />
-
-        {data.restaurants.map((restaurant) => (
+        <RestaurantSearch onSearch={this.getRestaurants} />
+        {restaurants.map((restaurant) => (
           <Restaurant restaurant={restaurant} key={restaurant.id} />
         ))}
       </Grid>
     );
   }
 }
+
+RestaurantsContainer.contextType = LocationContext;
 
 export default RestaurantsContainer;
