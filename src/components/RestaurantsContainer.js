@@ -82,6 +82,9 @@ class RestaurantsContainer extends React.Component {
   handleOnClick = (selectedRestaurant) => {
     this.setState({ selectedRestaurant, showDetailsModal: true });
   };
+  handleClose = () => {
+    this.setState({ selectedRestaurant: {}, showDetailsModal: false });
+  };
   render() {
     const { data, loading, selectedData, selectedRestaurant } = this.state;
 
@@ -130,6 +133,7 @@ class RestaurantsContainer extends React.Component {
           open={this.state.showDetailsModal}
           restaurant={selectedRestaurant}
           key={selectedRestaurant.id}
+          handleClose={this.handleClose}
         />
       </Grid>
     );

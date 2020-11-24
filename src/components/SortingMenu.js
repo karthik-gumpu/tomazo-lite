@@ -52,7 +52,7 @@ const SortingMenu = ({ selectedData, ...props }) => {
         onClose={handleClose}
       >
         {menuItems.map((items) => (
-          <>
+          <span>
             {items.map((item) => (
               <MenuItem
                 onClick={() => handleSelect(item.type, item.key)}
@@ -67,7 +67,7 @@ const SortingMenu = ({ selectedData, ...props }) => {
               </MenuItem>
             ))}
             <Divider />
-          </>
+          </span>
         ))}
       </Menu>
     </>
