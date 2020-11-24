@@ -15,6 +15,8 @@ import { get } from "lodash";
 import LocationOnIcon from "@material-ui/icons/LocationOn";
 import MoneyIcon from "@material-ui/icons/Money";
 
+import { isTrue } from "../utils";
+
 const useStyles = makeStyles({
   root: {
     // height: 450,
@@ -32,13 +34,14 @@ const useStyles = makeStyles({
   },
 });
 
-const isTrue = (value) => !Boolean(JSON.parse(value));
-
 const Restaurant = ({ restaurant, ...props }) => {
   const classes = useStyles();
 
   return (
-    <Card className={classes.root}>
+    <Card
+      className={classes.root}
+      onClick={() => props.handleOnClick(restaurant)}
+    >
       <CardActionArea>
         <CardMedia
           className={classes.media}

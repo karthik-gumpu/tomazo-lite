@@ -11,6 +11,7 @@ import { PAGINATION_LIMIT } from "../constants";
 import SortingMenu from "./SortingMenu";
 
 import allData from "./data.json";
+import RestaurantDetailsModal from "./RestaurantDetailsModal";
 
 class RestaurantsContainer extends React.Component {
   constructor(props) {
@@ -27,7 +28,9 @@ class RestaurantsContainer extends React.Component {
         ...allData,
       },
       selectedData: {},
+      selectedRestaurant: {},
       loading: false,
+      showDetailsModal: false,
     };
   }
 
@@ -76,8 +79,12 @@ class RestaurantsContainer extends React.Component {
       this.getRestaurants
     );
   };
+  handleOnClick = (selectedRestaurant) => {
+    this.setState({ selectedRestaurant, showDetailsModal: true });
+  };
   render() {
-    const { data, loading, selectedData } = this.state;
+    const { data, loading, selectedData, selectedRestaurant } = this.state;
+
     const canApplyWaypoint =
       !loading && // Apply waypoint if api is not in progress
       data.results_found && // Apply waypoint if there are any records
@@ -103,7 +110,10 @@ class RestaurantsContainer extends React.Component {
           ) : null}
           {data.restaurants.map((item) => (
             <Grid item xs={12} sm={6} md={3} key={item.restaurant.id}>
-              <Restaurant restaurant={item.restaurant} />
+              <Restaurant
+                restaurant={item.restaurant}
+                handleOnClick={this.handleOnClick}
+              />
             </Grid>
           ))}
           {loading &&
@@ -116,6 +126,11 @@ class RestaurantsContainer extends React.Component {
             <Waypoint onEnter={this.getMoreRestaurants} />
           ) : null}
         </Grid>
+        <RestaurantDetailsModal
+          open={this.state.showDetailsModal}
+          restaurant={selectedRestaurant}
+          key={selectedRestaurant.id}
+        />
       </Grid>
     );
   }

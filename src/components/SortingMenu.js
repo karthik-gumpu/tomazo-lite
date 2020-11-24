@@ -54,7 +54,10 @@ const SortingMenu = ({ selectedData, ...props }) => {
         {menuItems.map((items) => (
           <>
             {items.map((item) => (
-              <MenuItem onClick={() => handleSelect(item.type, item.key)}>
+              <MenuItem
+                onClick={() => handleSelect(item.type, item.key)}
+                key={item.name}
+              >
                 <ListItemIcon>
                   {selectedData[item.type] === item.key && (
                     <CheckIcon fontSize="small" />
