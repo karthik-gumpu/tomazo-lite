@@ -24,7 +24,7 @@ class RestaurantsContainer extends React.Component {
     this.state = {
       data: {
         ...this.defaultData,
-        // ...allData,
+        ...allData,
       },
       selectedData: {},
       loading: false,
@@ -90,7 +90,7 @@ class RestaurantsContainer extends React.Component {
           {data.results_found ? (
             <>
               <Grid item xs={6} md={6}>
-                Showing {data.results_start + data.results_shown} of
+                Showing {data.results_start + data.results_shown} of{" "}
                 {data.results_found} restaurants
               </Grid>
               <Grid item xs={6} md={6} style={{ textAlign: "right" }}>
