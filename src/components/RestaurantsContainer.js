@@ -1,6 +1,9 @@
 import React from "react";
+import { Grid } from "@material-ui/core";
 
 import Restaurant from "./Restaurant";
+import RestaurantSearch from "./RestaurantSearch";
+
 const data = {
   results_found: "53",
   results_start: "11",
@@ -101,13 +104,22 @@ const data = {
   ],
 };
 class RestaurantsContainer extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      restaurants: [],
+      loading: false,
+    };
+  }
   render() {
     return (
-      <div>
+      <Grid container style={{ padding: 10 }}>
+        <RestaurantSearch />
+
         {data.restaurants.map((restaurant) => (
           <Restaurant restaurant={restaurant} key={restaurant.id} />
         ))}
-      </div>
+      </Grid>
     );
   }
 }

@@ -18,7 +18,6 @@ const AppContainer = () => {
     <div className={classes.root}>
       <Grid container>
         <Header />
-        <Toolbar />
         <RestaurantsContainer />
       </Grid>
     </div>
