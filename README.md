@@ -17,6 +17,7 @@ In the project directory, you can run:
 
 ## Tech and libraries used
 
+- YARN
 - ReactJs
 - Material UI
 - Lodash
@@ -48,6 +49,7 @@ In the project directory, you can run:
     > Minimum one character required to search
 
     > Restricted to show top 20 restaurants
+
 - **Search By Category, Cuisines**
 
 - - Select multiple cuisines, categories and
@@ -80,7 +82,11 @@ In the project directory, you can run:
 # Note
 
 ```
-1. ZOMATO access key kept in inside code base, Later we can make it available from env file
+1. ZOMATO_USER_KEY kept in inside code base, Later we can make it available from env file
 
-2.
+2. As per Zomato API documentation, Restaurants search api not providing ability for filtering data based on rating
+
+3. [Search section 2] As per Zomato API documentation, There is no api providing all localities in a city
+
+4. Didnt added prop type checking as it is test project
 ```
