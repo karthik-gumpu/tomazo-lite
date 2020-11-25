@@ -1,207 +1,101 @@
 import React from "react";
-import { Grid, Button } from "@material-ui/core";
+import { Grid } from "@material-ui/core";
 import RestaurantIcon from "@material-ui/icons/Restaurant";
-import Input from "@material-ui/core/Input";
-import InputLabel from "@material-ui/core/InputLabel";
-import MenuItem from "@material-ui/core/MenuItem";
-import FormControl from "@material-ui/core/FormControl";
-import ListItemText from "@material-ui/core/ListItemText";
-import Select from "@material-ui/core/Select";
-import Checkbox from "@material-ui/core/Checkbox";
-import SearchIcon from "@material-ui/icons/Search";
-import * as _ from "lodash";
 
 import SearchBox from "./SearchBox";
-import api from "../utils/api";
+import api, { cancelApis } from "../utils/api";
 import LocationContext from "../store/LocationContext";
+import RestaurantDetailsModal from "./RestaurantDetailsModal";
+import RestaurantSuggestionCard from "./RestaurantSuggestionCard";
+// import allData from "./data.json";
 
-const data = {
-  categories: [
-    { categories: { id: 1, name: "Delivery" } },
-    { categories: { id: 13, name: "Pocket Friendly Delivery" } },
-    { categories: { id: 2, name: "Dine-out" } },
-    { categories: { id: 3, name: "Nightlife" } },
-    { categories: { id: 8, name: "Breakfast" } },
-    { categories: { id: 6, name: "Cafes" } },
-  ],
+const RestaurantsSearch = () => {
+  const [loading, setLoading] = React.useState(false);
+  const [suggestions, setSuggestions] = React.useState([]);
+  const [search, setSearch] = React.useState("");
+  const [showModal, setShowModal] = React.useState(false);
+  const [selectedRestaurant, setSelectedRestaurant] = React.useState({});
+
+  const locationContext = React.useContext(LocationContext);
+
+  const apiRequest = React.useRef(false);
+  const timeoutRequest = React.useRef(false);
+
+  const searchRestaurants = (e) => {
+    setSearch(e.target.value);
+    setSuggestions([]);
+
+    // Cancel if there is any prev in progress api call
+    if (apiRequest.current) {
+      cancelApis([apiRequest.current]);
+    }
+
+    if (timeoutRequest.current) {
+      clearTimeout(timeoutRequest.current);
+    }
+    // Do api call on 1 sec typing pause
+    timeoutRequest.current = setTimeout(() => {
+      getRestaurants(e.target.value);
+    }, 1000);
+  };
+
+  // Returns top 20 results
+  // Pagination not implementing for ease of use.
+  // Lets user type right keywords to get accurate results
+  const getRestaurants = (key) => {
+    setLoading(true);
+    apiRequest.current = api
+      .request({
+        url: `/v2.1/search?entity_id=${locationContext.location.id}&entity_type=city&q=${key}`,
+      })
+      .then(
+        (response) => {
+          setLoading(false);
+          setSuggestions(response.restaurants);
+        },
+        () => {
+          setLoading(false);
+        }
+      );
+  };
+  const onSelect = (restaurant) => {
+    setSelectedRestaurant(restaurant);
+    setShowModal(true);
+  };
+  const handleModalClose = () => {
+    setSelectedRestaurant({});
+    setShowModal(false);
+  };
+  return (
+    <>
+      <Grid xs={12} md={12} container>
+        <Grid item xs={3} md={3}></Grid>
+        <Grid item xs={12} md={6}>
+          <SearchBox
+            icon={RestaurantIcon}
+            placeholder="Search restaurants..."
+            options={suggestions}
+            loading={loading}
+            onChange={searchRestaurants}
+            value={search}
+            renderOption={(item) => (
+              <RestaurantSuggestionCard
+                restaurant={item.restaurant}
+                onClick={onSelect}
+              />
+            )}
+            getOptionLabel={(option) => option.name || ""}
+          />
+        </Grid>
+      </Grid>
+      <RestaurantDetailsModal
+        key={selectedRestaurant.id}
+        restaurant={selectedRestaurant}
+        open={showModal}
+        handleClose={handleModalClose}
+      />
+    </>
+  );
 };
-
-class RestaurantsSearch extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      loading: false,
-      categories: [],
-      suggestions: [],
-      cuisines: [],
-      selectedData: {
-        cuisineIds: [],
-        categoryIds: [],
-        searchKey: "",
-      },
-    };
-  }
-
-  componentDidMount() {
-    // TODO: Commenting temporarly. Uncomment later
-    // this.getCategories();
-    // this.getCuisines();
-  }
-
-  updateSelectedData = (key, value) => {
-    this.setState((prevState) => ({
-      selectedData: {
-        ...prevState.selectedData,
-        [key]: value,
-      },
-    }));
-  };
-
-  handleSelectChange = (e, type) => {
-    this.updateSelectedData(type, e.target.value);
-  };
-
-  getCuisines = () => {
-    api
-      .request({ url: `/v2.1/cuisines?city_id=${this.context.location.id}` })
-      .then(({ cuisines }) => {
-        this.setState({ cuisines });
-      });
-  };
-
-  getCategories = () => {
-    api
-      .request({ url: `/v2.1/categories?city_id=${this.context.location.id}` })
-      .then(({ categories }) => {
-        this.setState({ categories });
-      });
-  };
-  handleSearch = () => {
-    this.props.onSearch(this.state.selectedData);
-  };
-
-  handleChange = (e) => {
-    this.updateSelectedData("searchKey", e.target.value);
-  };
-  render() {
-    console.log("state", this.state);
-    const { selectedData, cuisines, categories } = this.state;
-    return (
-      <>
-        <Grid xs={12} md={12} container>
-          <Grid item xs={3} md={3}></Grid>
-          <Grid item xs={12} md={6}>
-            <SearchBox
-              icon={RestaurantIcon}
-              placeholder="Search restaurants..."
-              options={this.state.suggestions}
-              loading={this.state.loading}
-              onChange={this.handleChange}
-              value={selectedData.searchKey}
-              getOptionLabel={(option) => option.name || ""}
-            />
-          </Grid>
-        </Grid>
-        <Grid xs={12} md={12} container>
-          <Grid item xs={0} md={3}></Grid>
-          <Grid item xs={12} md={6} container spacing={3}>
-            <Grid item xs={6} md={4}>
-              <FormControl fullWidth>
-                <InputLabel id="categories">Categories</InputLabel>
-                <Select
-                  labelId="categories"
-                  id="categories-select"
-                  multiple
-                  value={selectedData.categoryIds}
-                  onChange={(e) => this.handleSelectChange(e, "categoryIds")}
-                  input={<Input />}
-                  renderValue={(selectedValues) => {
-                    return selectedValues
-                      .map((id) => {
-                        const item = categories.find(
-                          (x) => x.categories.id === id
-                        );
-                        return item.categories.name;
-                      })
-                      .join(",");
-                  }}
-                >
-                  {categories.map((item) => (
-                    <MenuItem
-                      key={item.categories.id}
-                      value={item.categories.id}
-                    >
-                      <Checkbox
-                        checked={
-                          selectedData.categoryIds.indexOf(item.categories.id) >
-                          -1
-                        }
-                      />
-                      <ListItemText primary={item.categories.name} />
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </Grid>
-            <Grid item xs={6} md={4}>
-              <FormControl fullWidth>
-                <InputLabel id="cuisines">Cuisines</InputLabel>
-                <Select
-                  labelId="cuisines"
-                  id="cuisines-select"
-                  multiple
-                  value={selectedData.cuisineIds}
-                  onChange={(e) => this.handleSelectChange(e, "cuisineIds")}
-                  input={<Input />}
-                  renderValue={(selectedValues) => {
-                    return selectedValues
-                      .map((id) => {
-                        const item = cuisines.find(
-                          (x) => x.cuisine.cuisine_id === id
-                        );
-                        return item.cuisine.cuisine_name;
-                      })
-                      .join(",");
-                  }}
-                >
-                  {cuisines.map((item) => (
-                    <MenuItem
-                      key={item.cuisine.cuisine_id}
-                      value={item.cuisine.cuisine_id}
-                    >
-                      <Checkbox
-                        checked={
-                          selectedData.categoryIds.indexOf(
-                            item.cuisine.cuisine_id
-                          ) > -1
-                        }
-                      />
-                      <ListItemText primary={item.cuisine.cuisine_name} />
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </Grid>
-            <Grid item xs={12} md={4}>
-              <FormControl fullWidth>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  fullWidth
-                  style={{ marginTop: 10 }}
-                  onClick={this.handleSearch}
-                >
-                  <SearchIcon /> Search
-                </Button>
-              </FormControl>
-            </Grid>
-          </Grid>
-        </Grid>
-      </>
-    );
-  }
-}
-
-RestaurantsSearch.contextType = LocationContext;
 
 export default RestaurantsSearch;
