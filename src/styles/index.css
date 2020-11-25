@@ -16,3 +16,8 @@ code {
   font-size: 15px !important;
   padding: 5px !important;
 }
+.ellipsis {
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}

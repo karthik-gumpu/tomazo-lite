@@ -24,6 +24,7 @@ const Header = () => {
   const classes = useStyles();
   const locationContext = React.useContext(LocationContext);
 
+  // Prompt location change modal by default if no location selected yet
   const [openModal, setOpenModal] = React.useState(
     !Boolean(locationContext.location)
   );

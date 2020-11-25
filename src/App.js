@@ -11,7 +11,6 @@ const defaultLocation = getKeyFromLocal(ZOMATO_LOCAL_STORAGE.LOCATION);
 
 const App = () => {
   const [location, setLocation] = React.useState(defaultLocation);
-  // const updateLocation = (location) => {};
   return (
     <LocationContext.Provider value={{ location, setLocation }}>
       <MuiThemeProvider theme={theme}>

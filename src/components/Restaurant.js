@@ -17,19 +17,8 @@ import UserVotes from "./common/UserVotes";
 import ReviewCount from "./common/ReviewCount";
 
 const useStyles = makeStyles({
-  root: {
-    // height: 450,
-  },
   media: {
     height: 140,
-  },
-  actionIcon: {
-    fontSize: 15,
-  },
-  ellipsis: {
-    whiteSpace: "nowrap",
-    overflow: "hidden",
-    textOverflow: "ellipsis",
   },
 });
 
@@ -37,10 +26,7 @@ const Restaurant = ({ restaurant, ...props }) => {
   const classes = useStyles();
 
   return (
-    <Card
-      className={classes.root}
-      onClick={() => props.handleOnClick(restaurant)}
-    >
+    <Card onClick={() => props.handleOnClick(restaurant)}>
       <CardActionArea>
         <CardMedia
           className={classes.media}
@@ -52,19 +38,19 @@ const Restaurant = ({ restaurant, ...props }) => {
             gutterBottom
             variant="h5"
             component="h4"
-            className={classes.ellipsis}
+            className="ellipsis"
             title={restaurant.name}
           >
             {restaurant.name}
           </Typography>
-          <Typography title={restaurant.cuisines} className={classes.ellipsis}>
+          <Typography title={restaurant.cuisines} className="ellipsis">
             {restaurant.cuisines}
           </Typography>
           <Typography
             variant="body2"
             color="textSecondary"
             component="p"
-            className={classes.ellipsis}
+            className="ellipsis"
             title={get(restaurant, "location.address", "N/A")}
           >
             <LocationOnIcon /> {get(restaurant, "location.address", "N/A")}

@@ -9,21 +9,21 @@ import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 
 import api, { cancelApis } from "../utils/api";
-import SearchBox from "./SearchBox";
+import SearchBox from "./common/SearchBox";
 import { storeJsonInLocal } from "../utils/lsUtils";
 import { ZOMATO_LOCAL_STORAGE } from "../constants";
 import LocationContext from "../store/LocationContext";
 
-const CityRender = ({ city, ...props }) => {
+const CityRender = ({ city, onClick }) => {
   return (
-    <Grid container alignItems="center" onClick={() => props.onClick(city)}>
+    <Grid container alignItems="center" onClick={() => onClick(city)}>
       <Grid item>
         <LocationOnIcon />
       </Grid>
       <Grid item xs>
         {city.name}
         <Typography variant="body2" color="textSecondary">
-          {city.state_code} {city.country_name}
+          {city.state_name}, {city.country_name}
         </Typography>
       </Grid>
     </Grid>

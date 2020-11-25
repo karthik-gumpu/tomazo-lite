@@ -22,15 +22,6 @@ const useStyles = makeStyles(() => ({
     width: "100%",
     height: 70,
   },
-  actionIcon: {
-    fontSize: 15,
-    padding: 5,
-  },
-  ellipsis: {
-    whiteSpace: "nowrap",
-    overflow: "hidden",
-    textOverflow: "ellipsis",
-  },
 }));
 
 const RestaurantSuggestionCard = ({ restaurant, ...props }) => {
@@ -54,18 +45,10 @@ const RestaurantSuggestionCard = ({ restaurant, ...props }) => {
         <Typography component="h6" variant="h6">
           {restaurant.name}
         </Typography>
-        <Typography
-          variant="body2"
-          color="textSecondary"
-          className={classes.ellipsis}
-        >
+        <Typography variant="body2" color="textSecondary" className="ellipsis">
           {restaurant.cuisines}
         </Typography>
-        <Typography
-          variant="body2"
-          color="textSecondary"
-          className={classes.ellipsis}
-        >
+        <Typography variant="body2" color="textSecondary" className="ellipsis">
           {restaurant.location.address}
         </Typography>
       </Grid>

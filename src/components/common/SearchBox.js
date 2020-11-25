@@ -1,6 +1,6 @@
 import React from "react";
 import TextField from "@material-ui/core/TextField";
-import { fade, makeStyles } from "@material-ui/core/styles";
+import { makeStyles } from "@material-ui/core/styles";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 
 const useStyles = makeStyles((theme) => ({
@@ -41,7 +41,7 @@ const SearchBox = (props) => {
         id="searchbox"
         freeSolo
         options={props.options}
-        filterOptions={(items) => items} // Hack to return all items given as options
+        filterOptions={(items) => items} // Just a hack to return all items given as options
         loading={props.loading}
         renderOption={props.renderOption}
         getOptionLabel={props.getOptionLabel}

@@ -3,12 +3,12 @@ import { Grid, Button } from "@material-ui/core";
 import RestaurantIcon from "@material-ui/icons/Restaurant";
 import KeyboardReturnIcon from "@material-ui/icons/KeyboardReturn";
 
-import SearchBox from "./SearchBox";
+import SearchBox from "./common/SearchBox";
 import api, { cancelApis } from "../utils/api";
 import LocationContext from "../store/LocationContext";
 import RestaurantDetailsModal from "./RestaurantDetailsModal";
 import RestaurantSuggestionCard from "./RestaurantSuggestionCard";
-import allData from "./data.json";
+// import allData from "./data.json";
 
 const RestaurantsSearch = (props) => {
   const [loading, setLoading] = React.useState(false);
@@ -70,7 +70,6 @@ const RestaurantsSearch = (props) => {
     setSelectedRestaurant({});
     setShowModal(false);
   };
-  console.log("hello", suggestions);
   return (
     <>
       <Grid container>

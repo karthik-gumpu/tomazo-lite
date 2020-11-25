@@ -7,12 +7,11 @@ import Restaurant from "./Restaurant";
 import RestaurantFiltering from "./RestaurantFiltering";
 import api from "../utils/api";
 import LocationContext from "../store/LocationContext";
-import EmptyLoader from "./EmptyLoader";
+import EmptyLoader from "./common/EmptyLoader";
 import { PAGINATION_LIMIT } from "../constants";
 import SortingMenu from "./SortingMenu";
-
-import allData from "./data.json";
 import RestaurantDetailsModal from "./RestaurantDetailsModal";
+// import allData from "./data.json";
 
 class RestaurantsContainer extends React.Component {
   constructor(props) {
@@ -32,7 +31,6 @@ class RestaurantsContainer extends React.Component {
     this.state = {
       data: {
         ...this.defaultData,
-        // ...allData,
       },
       selectedData: {
         ...this.defaultSelectedData,
@@ -46,7 +44,7 @@ class RestaurantsContainer extends React.Component {
     this.prevContext = this.context;
   }
   componentDidUpdate() {
-    // Clear the current restaurants while changing location
+    // Reset the current restaurants while changing location
     if (
       get(this.prevContext, "location.id", "") !==
       get(this.context, "location.id", "")
@@ -115,11 +113,11 @@ class RestaurantsContainer extends React.Component {
   };
   render() {
     const { data, loading, selectedData, selectedRestaurant } = this.state;
-
+    // Apply waypoint if api is not in progress and there are any records and there are more records to load
     const canApplyWaypoint =
-      !loading && // Apply waypoint if api is not in progress
-      data.results_found && // Apply waypoint if there are any records
-      data.results_start + data.results_shown < data.results_found; // Apply waypoint if there are more records to load
+      !loading &&
+      data.results_found &&
+      data.results_start + data.results_shown < data.results_found;
 
     return (
       <>
@@ -151,8 +149,8 @@ class RestaurantsContainer extends React.Component {
             </Grid>
           ))}
           {loading &&
-            [1, 2, 3, 4].map((key) => (
-              <Grid key={key} item xs={12} sm={6} md={3}>
+            [1, 2, 3, 4].map((key, index) => (
+              <Grid key={index} item xs={12} sm={6} md={3}>
                 <EmptyLoader />
               </Grid>
             ))}

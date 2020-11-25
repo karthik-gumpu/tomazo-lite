@@ -60,12 +60,7 @@ const Details = ({ restaurant }) => (
   </Grid>
 );
 
-const RestaurantDetailsModal = ({
-  open,
-  handleClose,
-  restaurant,
-  ...props
-}) => {
+const RestaurantDetailsModal = ({ open, handleClose, restaurant }) => {
   return (
     <Dialog open={open} maxWidth={"md"}>
       <DialogContent>
