@@ -28,9 +28,8 @@ class RestaurantFiltering extends React.Component {
   }
 
   componentDidMount() {
-    // TODO: Commenting temporarly. Uncomment later
-    // this.getCategories();
-    // this.getCuisines();
+    this.getCategories();
+    this.getCuisines();
   }
 
   updateSelectedData = (key, value) => {
