@@ -14,7 +14,7 @@ import { storeJsonInLocal } from "../utils/lsUtils";
 import { ZOMATO_LOCAL_STORAGE } from "../constants";
 import LocationContext from "../store/LocationContext";
 
-const CityRender = ({ city, onClick }) => {
+const CityRender = React.memo(({ city, onClick }) => {
   return (
     <Grid container alignItems="center" onClick={() => onClick(city)}>
       <Grid item>
@@ -28,7 +28,7 @@ const CityRender = ({ city, onClick }) => {
       </Grid>
     </Grid>
   );
-};
+});
 
 const ChangeLocationModal = ({ open, handleClose }) => {
   const [results, setResults] = React.useState([]);

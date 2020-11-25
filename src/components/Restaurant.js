@@ -22,9 +22,8 @@ const useStyles = makeStyles({
   },
 });
 
-const Restaurant = ({ restaurant, ...props }) => {
+const Restaurant = React.memo(({ restaurant, ...props }) => {
   const classes = useStyles();
-
   return (
     <Card onClick={() => props.handleOnClick(restaurant)}>
       <CardActionArea>
@@ -87,6 +86,6 @@ const Restaurant = ({ restaurant, ...props }) => {
       </CardActions>
     </Card>
   );
-};
+});
 
 export default Restaurant;

@@ -24,7 +24,7 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const RestaurantSuggestionCard = ({ restaurant, ...props }) => {
+const RestaurantSuggestionCard = React.memo(({ restaurant, ...props }) => {
   const classes = useStyles();
 
   return (
@@ -58,6 +58,6 @@ const RestaurantSuggestionCard = ({ restaurant, ...props }) => {
       </Grid>
     </Grid>
   );
-};
+});
 
 export default RestaurantSuggestionCard;
