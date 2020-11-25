@@ -35,6 +35,7 @@ In the project directory, you can run:
 - System caches selected location for next visit
 - Provided ability to change location
 - Type in input box to get suggestions
+- System resets the current results while changing location
 
 **2. Restarurants search**
 

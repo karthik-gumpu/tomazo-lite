@@ -1,6 +1,7 @@
 import React from "react";
 import { Grid } from "@material-ui/core";
 import { Waypoint } from "react-waypoint";
+import { get } from "lodash";
 
 import Restaurant from "./Restaurant";
 import RestaurantFiltering from "./RestaurantFiltering";
@@ -22,21 +23,40 @@ class RestaurantsContainer extends React.Component {
       results_start: 0,
       results_shown: 0,
     };
+    this.defaultSelectedData = {
+      cuisineIds: [],
+      categoryIds: [],
+      sort: "",
+      order: "",
+    };
     this.state = {
       data: {
         ...this.defaultData,
         // ...allData,
       },
       selectedData: {
-        cuisineIds: [],
-        categoryIds: [],
-        sort: "",
-        order: "",
+        ...this.defaultSelectedData,
       },
       selectedRestaurant: {},
       loading: false,
       showDetailsModal: false,
     };
+  }
+  componentDidMount() {
+    this.prevContext = this.context;
+  }
+  componentDidUpdate() {
+    // Clear the current restaurants while changing location
+    if (
+      get(this.prevContext, "location.id", "") !==
+      get(this.context, "location.id", "")
+    ) {
+      this.prevContext = this.context;
+      this.setState({
+        data: this.defaultData,
+        selectedData: this.defaultSelectedData,
+      });
+    }
   }
 
   onSearch = (selectedData) => {
