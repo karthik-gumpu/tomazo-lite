@@ -72,7 +72,7 @@ const RestaurantsSearch = (props) => {
   };
   return (
     <>
-      <Grid container>
+      <Grid container spacing={3}>
         <Grid item xs={3} md={3}></Grid>
         <Grid item xs={12} md={6}>
           <SearchBox
