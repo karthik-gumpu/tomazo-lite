@@ -46,6 +46,7 @@ const SearchBox = (props) => {
     <div className={classes.grow}>
       <Autocomplete
         id="searchbox"
+        freeSolo
         options={props.options}
         loading={props.loading}
         renderOption={props.renderOption}
