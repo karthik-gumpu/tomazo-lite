@@ -1,11 +1,9 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
-import IconButton from "@material-ui/core/IconButton";
 import Typography from "@material-ui/core/Typography";
-import StarBorderIcon from "@material-ui/icons/StarBorder";
-import FavoriteBorderIcon from "@material-ui/icons/FavoriteBorder";
-import { get } from "lodash";
+import UserRating from "./common/UserRating";
+import UserVotes from "./common/UserVotes";
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -49,6 +47,7 @@ const RestaurantSuggestionCard = ({ restaurant, ...props }) => {
           className={classes.media}
           src={restaurant.thumb}
           title={restaurant.name}
+          alt={restaurant.name}
         />
       </Grid>
       <Grid item className={classes.details} xs={8} md={8}>
@@ -71,26 +70,8 @@ const RestaurantSuggestionCard = ({ restaurant, ...props }) => {
         </Typography>
       </Grid>
       <Grid item xs={2} md={2}>
-        <IconButton className={classes.actionIcon}>
-          <StarBorderIcon
-            style={{
-              color: `#${get(
-                restaurant,
-                "user_rating.rating_color",
-                "inherit"
-              )}`,
-            }}
-          />
-          {get(restaurant, "user_rating.aggregate_rating", "N/A")}
-        </IconButton>
-        <IconButton className={classes.actionIcon}>
-          <FavoriteBorderIcon
-            style={{
-              color: `#fc6c85`,
-            }}
-          />
-          {get(restaurant, "user_rating.votes", "N/A")}
-        </IconButton>
+        <UserRating userRating={restaurant.user_rating} />
+        <UserVotes userRating={restaurant.user_rating} />
       </Grid>
     </Grid>
   );

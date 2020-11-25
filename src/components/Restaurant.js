@@ -7,15 +7,14 @@ import CardContent from "@material-ui/core/CardContent";
 import CardMedia from "@material-ui/core/CardMedia";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
-import StarBorderIcon from "@material-ui/icons/StarBorder";
-import FavoriteBorderIcon from "@material-ui/icons/FavoriteBorder";
-import IconButton from "@material-ui/core/IconButton";
-import ChatBubbleOutlineIcon from "@material-ui/icons/ChatBubbleOutline";
 import { get } from "lodash";
 import LocationOnIcon from "@material-ui/icons/LocationOn";
 import MoneyIcon from "@material-ui/icons/Money";
 
 import { isTrue } from "../utils";
+import UserRating from "./common/UserRating";
+import UserVotes from "./common/UserVotes";
+import ReviewCount from "./common/ReviewCount";
 
 const useStyles = makeStyles({
   root: {
@@ -89,36 +88,16 @@ const Restaurant = ({ restaurant, ...props }) => {
               Order Now
             </Button>
           ) : (
-            <Button variant="outlined" color="seconday" size="small">
+            <Button variant="outlined" color="secondary" size="small">
               Not Delivering
             </Button>
           )}
         </CardContent>
       </CardActionArea>
       <CardActions disableSpacing>
-        <IconButton className={classes.actionIcon}>
-          <StarBorderIcon
-            style={{
-              color: `#${get(
-                restaurant,
-                "user_rating.rating_color",
-                "inherit"
-              )}`,
-            }}
-          />
-          {get(restaurant, "user_rating.aggregate_rating", "N/A")}
-        </IconButton>
-        <IconButton className={classes.actionIcon}>
-          <FavoriteBorderIcon
-            style={{
-              color: `#fc6c85`,
-            }}
-          />
-          {get(restaurant, "user_rating.votes", "N/A")}
-        </IconButton>
-        <IconButton className={classes.actionIcon}>
-          <ChatBubbleOutlineIcon /> {get(restaurant, "all_reviews_count", 0)}
-        </IconButton>
+        <UserRating userRating={restaurant.user_rating} />
+        <UserVotes userRating={restaurant.user_rating} />
+        <ReviewCount count={restaurant.all_reviews_count} />
       </CardActions>
     </Card>
   );

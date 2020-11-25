@@ -51,12 +51,12 @@ const SortingMenu = ({ selectedData, ...props }) => {
         open={Boolean(anchorEl)}
         onClose={handleClose}
       >
-        {menuItems.map((items) => (
-          <span>
+        {menuItems.map((items, index) => (
+          <span key={index}>
             {items.map((item) => (
               <MenuItem
                 onClick={() => handleSelect(item.type, item.key)}
-                key={item.name}
+                key={item.key}
               >
                 <ListItemIcon>
                   {selectedData[item.type] === item.key && (
