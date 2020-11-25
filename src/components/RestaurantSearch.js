@@ -12,7 +12,7 @@ import allData from "./data.json";
 
 const RestaurantsSearch = (props) => {
   const [loading, setLoading] = React.useState(false);
-  const [suggestions, setSuggestions] = React.useState(allData.restaurants);
+  const [suggestions, setSuggestions] = React.useState([]);
   const [search, setSearch] = React.useState("");
   const [showModal, setShowModal] = React.useState(false);
   const [selectedRestaurant, setSelectedRestaurant] = React.useState({});

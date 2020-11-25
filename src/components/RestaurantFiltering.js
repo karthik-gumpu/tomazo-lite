@@ -13,17 +13,6 @@ import KeyboardReturnIcon from "@material-ui/icons/KeyboardReturn";
 import api from "../utils/api";
 import LocationContext from "../store/LocationContext";
 
-// const data = {
-//   categories: [
-//     { categories: { id: 1, name: "Delivery" } },
-//     { categories: { id: 13, name: "Pocket Friendly Delivery" } },
-//     { categories: { id: 2, name: "Dine-out" } },
-//     { categories: { id: 3, name: "Nightlife" } },
-//     { categories: { id: 8, name: "Breakfast" } },
-//     { categories: { id: 6, name: "Cafes" } },
-//   ],
-// };
-
 class RestaurantFiltering extends React.Component {
   constructor(props) {
     super(props);
@@ -146,7 +135,7 @@ class RestaurantFiltering extends React.Component {
                   >
                     <Checkbox
                       checked={
-                        selectedData.categoryIds.indexOf(
+                        selectedData.cuisineIds.indexOf(
                           item.cuisine.cuisine_id
                         ) > -1
                       }

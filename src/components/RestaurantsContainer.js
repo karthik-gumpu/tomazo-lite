@@ -25,9 +25,14 @@ class RestaurantsContainer extends React.Component {
     this.state = {
       data: {
         ...this.defaultData,
-        ...allData,
+        // ...allData,
       },
-      selectedData: {},
+      selectedData: {
+        cuisineIds: [],
+        categoryIds: [],
+        sort: "",
+        order: "",
+      },
       selectedRestaurant: {},
       loading: false,
       showDetailsModal: false,
@@ -35,7 +40,10 @@ class RestaurantsContainer extends React.Component {
   }
 
   onSearch = (selectedData) => {
-    this.setState({ selectedData }, this.getRestaurants);
+    this.setState(
+      (prevState) => ({ ...prevState.selectedData, ...selectedData }),
+      this.getRestaurants
+    );
   };
 
   getRestaurants = (fetchMore) => {
@@ -50,7 +58,7 @@ class RestaurantsContainer extends React.Component {
     const start = fetchMore ? data.results_start + data.results_shown : 0;
     api
       .request({
-        url: `/v2.1/search?entity_id=${location.id}&entity_type=city&cuisines${cuisineIds}&categories${categoryIds}&start=${start}&count=${PAGINATION_LIMIT}&sort=${selectedData.sort}&order=${selectedData.order}`,
+        url: `/v2.1/search?entity_id=${location.id}&entity_type=city&cuisines=${cuisineIds}&categories=${categoryIds}&start=${start}&count=${PAGINATION_LIMIT}&sort=${selectedData.sort}&order=${selectedData.order}`,
       })
       .then((response) => {
         this.setState((prevState) => {
@@ -123,7 +131,7 @@ class RestaurantsContainer extends React.Component {
             </Grid>
           ))}
           {loading &&
-            [1, 2, 3].map((key) => (
+            [1, 2, 3, 4].map((key) => (
               <Grid key={key} item xs={12} sm={6} md={3}>
                 <EmptyLoader />
               </Grid>
