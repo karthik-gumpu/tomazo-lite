@@ -73,7 +73,7 @@ const Restaurant = React.memo(({ restaurant, ...props }) => {
               Order Now
             </Button>
           ) : (
-            <Button variant="outlined" color="secondary" size="small">
+            <Button variant="outlined" size="small">
               Not Delivering
             </Button>
           )}
