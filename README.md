@@ -39,12 +39,15 @@ In the project directory, you can run:
 
 **2. Restarurants search**
 
-- Two sections -> Basic, Adanced
+- Two search sections -> named as Basic, Advanced
 - Provided option to switch between searches
 - **Search By name**
 - - Type name in input box, matching results shown in dropdown
 - - Click on one result to view full details
+
     > Minimum one character required to search
+
+    > Restricted to show top 20 restaurants
 - **Search By Category, Cuisines**
 
 - - Select multiple cuisines, categories and
