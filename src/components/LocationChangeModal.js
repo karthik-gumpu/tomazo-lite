@@ -59,6 +59,9 @@ const ChangeLocationModal = ({ open, handleClose }) => {
   };
 
   const getCities = (key) => {
+    if (!key) {
+      return;
+    }
     setLoading(true);
     apiRequest.current = api.request({ url: `/v2.1/cities?q=${key}` }).then(
       (response) => {

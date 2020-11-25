@@ -8,11 +8,11 @@ import api, { cancelApis } from "../utils/api";
 import LocationContext from "../store/LocationContext";
 import RestaurantDetailsModal from "./RestaurantDetailsModal";
 import RestaurantSuggestionCard from "./RestaurantSuggestionCard";
-// import allData from "./data.json";
+import allData from "./data.json";
 
 const RestaurantsSearch = (props) => {
   const [loading, setLoading] = React.useState(false);
-  const [suggestions, setSuggestions] = React.useState([]);
+  const [suggestions, setSuggestions] = React.useState(allData.restaurants);
   const [search, setSearch] = React.useState("");
   const [showModal, setShowModal] = React.useState(false);
   const [selectedRestaurant, setSelectedRestaurant] = React.useState({});
@@ -44,6 +44,9 @@ const RestaurantsSearch = (props) => {
   // Pagination not implementing for ease of use.
   // Lets user type right keywords to get accurate results
   const getRestaurants = (key) => {
+    if (!key) {
+      return;
+    }
     setLoading(true);
     apiRequest.current = api
       .request({
@@ -67,6 +70,7 @@ const RestaurantsSearch = (props) => {
     setSelectedRestaurant({});
     setShowModal(false);
   };
+  console.log("hello", suggestions);
   return (
     <>
       <Grid container>
