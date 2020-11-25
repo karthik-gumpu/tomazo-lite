@@ -41,6 +41,7 @@ const SearchBox = (props) => {
         id="searchbox"
         freeSolo
         options={props.options}
+        filterOptions={(items) => items} // Hack to return all items given as options
         loading={props.loading}
         renderOption={props.renderOption}
         getOptionLabel={props.getOptionLabel}

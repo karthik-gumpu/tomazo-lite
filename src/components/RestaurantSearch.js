@@ -78,7 +78,7 @@ const RestaurantsSearch = (props) => {
         <Grid item xs={12} md={6}>
           <SearchBox
             icon={RestaurantIcon}
-            placeholder="Search restaurants..."
+            placeholder="Start typing to search restaurants..."
             options={suggestions}
             loading={loading}
             onChange={searchRestaurants}
@@ -89,7 +89,10 @@ const RestaurantsSearch = (props) => {
                 onClick={onSelect}
               />
             )}
-            getOptionLabel={(option) => option.name || ""}
+            getOptionLabel={(option) =>
+              `${option.restaurant.name} ${option.restaurant.cuisines} ${option.restaurant.location.address}` ||
+              ""
+            }
           />
         </Grid>
         <Grid item xs={3} md={3}>

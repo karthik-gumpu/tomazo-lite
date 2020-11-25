@@ -101,7 +101,9 @@ const ChangeLocationModal = ({ open, handleClose }) => {
           value={search}
           options={results}
           renderOption={(city) => <CityRender city={city} onClick={onSelect} />}
-          getOptionLabel={(option) => option.name || ""}
+          getOptionLabel={(option) =>
+            `${option.name} ${option.state_name} ${option.country_name} `
+          }
           loading={loading}
         />
       </DialogContent>
