@@ -3,7 +3,7 @@ import { Grid } from "@material-ui/core";
 import { Waypoint } from "react-waypoint";
 
 import Restaurant from "./Restaurant";
-import RestaurantSearch from "./RestaurantSearch";
+import RestaurantFiltering from "./RestaurantFiltering";
 import api from "../utils/api";
 import LocationContext from "../store/LocationContext";
 import EmptyLoader from "./EmptyLoader";
@@ -50,7 +50,7 @@ class RestaurantsContainer extends React.Component {
     const start = fetchMore ? data.results_start + data.results_shown : 0;
     api
       .request({
-        url: `/v2.1/search?entity_id=${location.id}&entity_type=city&cuisines${cuisineIds}&categories${categoryIds}&q=${selectedData.searchKey}&start=${start}&count=${PAGINATION_LIMIT}&sort=${selectedData.sort}&order=${selectedData.order}`,
+        url: `/v2.1/search?entity_id=${location.id}&entity_type=city&cuisines${cuisineIds}&categories${categoryIds}&start=${start}&count=${PAGINATION_LIMIT}&sort=${selectedData.sort}&order=${selectedData.order}`,
       })
       .then((response) => {
         this.setState((prevState) => {
@@ -94,8 +94,11 @@ class RestaurantsContainer extends React.Component {
       data.results_start + data.results_shown < data.results_found; // Apply waypoint if there are more records to load
 
     return (
-      <Grid container style={{ margin: 20 }}>
-        <RestaurantSearch onSearch={this.onSearch} />
+      <>
+        <RestaurantFiltering
+          onSearch={this.onSearch}
+          toggleSearchView={this.props.toggleSearchView}
+        />
         <Grid container spacing={2} style={{ paddingTop: 30 }}>
           {data.results_found ? (
             <>
@@ -135,7 +138,7 @@ class RestaurantsContainer extends React.Component {
           key={selectedRestaurant.id}
           handleClose={this.handleClose}
         />
-      </Grid>
+      </>
     );
   }
 }

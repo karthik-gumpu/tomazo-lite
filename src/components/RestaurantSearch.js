@@ -1,6 +1,7 @@
 import React from "react";
-import { Grid } from "@material-ui/core";
+import { Grid, Button } from "@material-ui/core";
 import RestaurantIcon from "@material-ui/icons/Restaurant";
+import KeyboardReturnIcon from "@material-ui/icons/KeyboardReturn";
 
 import SearchBox from "./SearchBox";
 import api, { cancelApis } from "../utils/api";
@@ -9,7 +10,7 @@ import RestaurantDetailsModal from "./RestaurantDetailsModal";
 import RestaurantSuggestionCard from "./RestaurantSuggestionCard";
 // import allData from "./data.json";
 
-const RestaurantsSearch = () => {
+const RestaurantsSearch = (props) => {
   const [loading, setLoading] = React.useState(false);
   const [suggestions, setSuggestions] = React.useState([]);
   const [search, setSearch] = React.useState("");
@@ -86,6 +87,16 @@ const RestaurantsSearch = () => {
             )}
             getOptionLabel={(option) => option.name || ""}
           />
+        </Grid>
+        <Grid item xs={3} md={3}>
+          <Button
+            type="link"
+            color="primary"
+            onClick={props.toggleSearchView}
+            style={{ marginTop: 10 }}
+          >
+            <KeyboardReturnIcon /> Advanced
+          </Button>
         </Grid>
       </Grid>
       <RestaurantDetailsModal
