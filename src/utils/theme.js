@@ -9,6 +9,13 @@ const theme = createMuiTheme({
       contrastText: "#fff",
     },
   },
+  overrides: {
+    MuiListItemIcon: {
+      root: {
+        minWidth: 30,
+      },
+    },
+  },
 });
 
 export default theme;
